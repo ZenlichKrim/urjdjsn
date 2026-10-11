@@ -1,0 +1,10 @@
+{
+  "name": "МуриноБот",
+  "short_name": "Мурино",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0c0a",
+  "theme_color": "#0a0c0a",
+  "lang": "ru"
+}

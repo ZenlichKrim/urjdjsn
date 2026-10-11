@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Генератор файлов</title>
+<style>
+  body { background: #0a0c0a; color: #d4d8d4; font-family: monospace; padding: 20px; max-width: 600px; margin: 0 auto; }
+  h1 { color: #7ba87b; font-size: 20px; }
+  .card { background: #161a16; border: 1px solid #242a24; border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+  .card h2 { color: #7ba87b; font-size: 15px; margin: 0 0 8px; }
+  .card p { color: #7a847a; font-size: 13px; margin: 0 0 12px; }
+  .preview { background: #0a0c0a; border: 1px solid #242a24; border-radius: 8px; padding: 10px; font-size: 11px; color: #8a9a8a; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 12px; }
+  button { width: 100%; padding: 14px; background: #2a4a2a; color: #e8f0e8; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  button:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+<h1>Скачай два файла</h1>
+
+<div class="card">
+  <h2>sw.js</h2>
+  <p>Service Worker — обязателен для работы на GitHub Pages.</p>
+  <div class="preview" id="p1"></div>
+  <button onclick="dl('sw.js', F1, this)">⬇ Скачать sw.js</button>
+</div>
+
+<div class="card">
+  <h2>manifest.json</h2>
+  <p>Описание приложения.</p>
+  <div class="preview" id="p2"></div>
+  <button onclick="dl('manifest.json', F2, this)">⬇ Скачать manifest.json</button>
+</div>
+
+<script>
+const F1 = "self.addEventListener('install', () => { self.skipWaiting(); });\nself.addEventListener('activate', (e) => {\n  e.waitUntil(\n    caches.keys()\n      .then(k => Promise.all(k.map(x => caches.delete(x))))\n      .then(() => self.registration.unregister())\n  );\n});\n";
+
+const F2 = '{\n  "name": "МуриноБот",\n  "short_name": "Мурино",\n  "start_url": "./index.html",\n  "display": "standalone",\n  "orientation": "portrait",\n  "background_color": "#0a0c0a",\n  "theme_color": "#0a0c0a",\n  "lang": "ru"\n}\n';
+
+document.getElementById('p1').textContent = F1;
+document.getElementById('p2').textContent = F2;
+
+function dl(name, content, btn) {
+  const mime = name.endsWith('.json') ? 'application/json' : 'application/javascript';
+  const blob = new Blob([content], { type: mime + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  const orig = btn.textContent;
+  btn.textContent = '✓ Скачано';
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+</script>
+</body>
+</html>
